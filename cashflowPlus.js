@@ -135,6 +135,12 @@ function exchange(nowTimeDay, ratesH, amount, fromCurrency, toCurrency){
     return exchangeResultA;
 }
 
+function updatingCashFlow(nowTimeDay, Byr, Byn, Usd){// we updating the line of the cashflow
+    var cashData  = new Date();
+    cashData.setTime(nowTimeDay*1000*60*60*24);
+    db.cashflow.replaceOne({"Date": cashData},{"Date": cashData, "Byr": Byr, "Byn": Byn, "Usd": Usd});
+}
+
 function updateCashFlow(cycleTimeDay, finishTimeDay, exchangeResultA){
     var Byr, Byn, Usd; // values we want to update
     var dayCashboxA = []; // we store the result of readCashFlow
@@ -147,7 +153,11 @@ function updateCashFlow(cycleTimeDay, finishTimeDay, exchangeResultA){
         dayCashUpdateA[0] = dayCashboxA[0] + Byr;
         dayCashUpdateA[1] = dayCashboxA[1] + Byn;
         dayCashUpdateA[2] = dayCashboxA[2] + Usd;
-        writeCashFlow(i, dayCashUpdateA[0], dayCashUpdateA[1], dayCashUpdateA[2]);
+        print("##i= " + i);
+        print("##dayCashUpdateA[0]" + dayCashUpdateA[0]);
+        print("##dayCashUpdateA[1]" + dayCashUpdateA[1]);
+        print("##dayCashUpdateA[2]" + dayCashUpdateA[2]);
+        updatingCashFlow(i, dayCashUpdateA[0], dayCashUpdateA[1], dayCashUpdateA[2]);
     }
 }
 
