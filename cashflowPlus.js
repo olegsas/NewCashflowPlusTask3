@@ -167,6 +167,9 @@ function ifWeNeedExchange(nowTimeDay, finishTimeDay, ratesH, Byr, Byn, Usd){
     var weNeedByr;// we need Byr to compensate the -Usd
     var weTakeByr;// we take all money to compensate a part of -Usd
     var weHaveUsd;// we buy this money when we sell "weTakeByr" money
+    var weNeedUsd; // we need Usd to compensate the -Byr
+    var weTakeUsd; // we take all money to compensate a part of -Byr
+    var weHaveByr; // we buy this money when we sell "weTakeUsd" money
     var rate = ratesH.rateInDays[nowTimeDay]; // rate for the nowTimeDay
     
     
@@ -194,18 +197,31 @@ function ifWeNeedExchange(nowTimeDay, finishTimeDay, ratesH, Byr, Byn, Usd){
     }
 
     if ((Byr < 0) && (Usd > 0)){
-        weNeedByr = -Byr;
-        weNeedUsd = 
-        
         print("##day is = " + nowTimeDay);
         print("Usd is = " + Usd);
-        exchangeResultA = exchange(nowTimeDay, ratesH, Usd, "Usd", "Byr");
-        // we need to know if we can exchange not all the money
-        updateCashFlow(nowTimeDay, finishTimeDay, exchangeResultA);
-        // we update cashflow from the cycleTimeDay to the finishTimeDay
+        weNeedUsd = Math.round(-Byr / rate);
+        // money for compensate -Byr
+        if(Usd >= weNeedUsd){
+            // we have enough money for compensate -Byr
+            exchangeResultA = exchange(nowTimeDay, ratesH, weNeedUsd, "Usd", "Byr");
+            updateCashFlow(nowTimeDay, finishTimeDay, exchangeResultA);
+            // we update cashflow from the cycleTimeDay to the finishTimeDay
+        }
+
+        if(Usd < weNeedUsd){
+            // we have not enough money, we will sell all Usd
+            weTakeUsd = Usd; // we take all Usd money
+            weHaveByr = Math.round(weTakeUsd * rate);
+            // how many Byr we have if we sell all Usd
+            exchangeResultA = exchange(cycleTimeDay, ratesH, weTakeUsd, "Usd", "Byr");
+            updateCashFlow(nowTimeDay, finishTimeDay, exchangeResultA);
+            // we update cashflow from the cycleTimeDay to the finishTimeDay
+        }
+        //// WE NEED TO WRITE THE SAME CODE FOR THE BYN AND USD!!!
     }
 
 }
+
 
 function runCashFlowPLus(begin, end){// we want to use day from the begining Day 1970
     //ratesH.data is in a string format
