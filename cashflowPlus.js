@@ -111,16 +111,16 @@ function exchange(nowTimeDay, ratesH, amount, fromCurrency, toCurrency){
     // exchangeResultA[3] = toByr; exchangeResultA[4] = toByn; exchangeResultA[5] = toUsd;
     if((fromCurrency === "Byr") || (fromCurrency === "Byn")){
         if(fromCurrency === "Byr"){
-            fromByr = amount; toUsd = amount/rate;
+            fromByr = amount; toUsd = Math.round(amount/rate);
         } else{
-            fromByn = amount; toUsd = amount/rate;
+            fromByn = amount; toUsd = Math.round(amount/rate);
         }
     }
     if((toCurrency === "Byr") || (toCurrency === "Byn")){
         if(toCurrency === "Byr"){
-            fromUsd = amount; /*toByr = amount*rate;*/
+            fromUsd = amount; toByr = Math.round(amount*rate);
         } else{
-            fromUsd = amount; toByn = amount*rate;
+            fromUsd = amount; toByn = Math.round(amount*rate);
         }
     }
     exchangeResultA[0] = fromByr; exchangeResultA[1] = fromByn; exchangeResultA[2] = fromUsd;
