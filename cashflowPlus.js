@@ -139,6 +139,7 @@ function exchange(nowTimeDay, ratesH, amount, fromCurrency, toCurrency, Byr, Byn
 function updatingCashFlow(nowTimeDay, Byr, Byn, Usd){// we updating the line of the cashflow
     var cashData  = new Date();
     cashData.setTime(nowTimeDay*1000*60*60*24);
+    print("-----------Date is " + cashData);
     db.cashflow.replaceOne({"Date": cashData},{"Date": cashData, "Byr": Byr, "Byn": Byn, "Usd": Usd});
 }
 
@@ -173,7 +174,7 @@ function ifWeNeedExchange(nowTimeDay, finishTimeDay, ratesH, Byr, Byn, Usd){
     var rate = ratesH.rateInDays[nowTimeDay]; // rate for the nowTimeDay
     
     
-    if((Byr > 0) && (Usd < 0)){
+    /*if((Byr > 0) && (Usd < 0)){
         print("##day is = " + nowTimeDay);
         print("Byr is = " + Byr);
         weNeedByr = Math.round(-Usd*rate);
@@ -194,7 +195,7 @@ function ifWeNeedExchange(nowTimeDay, finishTimeDay, ratesH, Byr, Byn, Usd){
             // we update cashflow from the cycleTimeDay to the finishTimeDay
         }
         
-    }
+    }*/
 
     if ((Byr < 0) && (Usd > 0)){
         print("##day is = " + nowTimeDay);
@@ -213,7 +214,7 @@ function ifWeNeedExchange(nowTimeDay, finishTimeDay, ratesH, Byr, Byn, Usd){
             weTakeUsd = Usd; // we take all Usd money
             weHaveByr = Math.round(weTakeUsd * rate);
             // how many Byr we have if we sell all Usd
-            exchangeResultA = exchange(cycleTimeDay, ratesH, weTakeUsd, "Usd", "Byr");
+            exchangeResultA = exchange(nowTimeDay, ratesH, weTakeUsd, "Usd", "Byr");
             updateCashFlow(nowTimeDay, finishTimeDay, exchangeResultA);
             // we update cashflow from the cycleTimeDay to the finishTimeDay
         }
